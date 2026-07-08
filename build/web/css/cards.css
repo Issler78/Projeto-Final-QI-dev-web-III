@@ -1,0 +1,112 @@
+/* Cards pequenos */
+.card-pequeno{
+    padding: 20px 25px;
+    width: 150px;
+    height: 80px;
+}
+
+.card-pequeno h3{
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+.card-pequeno div{
+    display: grid;
+    grid-template-columns: 20px auto;
+    align-items: center;
+}
+
+.card-pequeno div .texto-card-pequeno{
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+
+/* Cards medios */
+.card-medio{
+    padding: 25px 20px;
+    margin: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.header-card-medio{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-card-medio .titulo-card{
+    margin: 0;
+}
+
+.header-card-medio span{
+    font-size: 35px;
+}
+
+.lista-card-medio{
+    margin: 10px 0 10px 20px;
+    padding: 0;
+    list-style-type: "-";
+    list-style-position: outside;
+}
+
+.lista-card-medio li{
+    padding-left: 10px;
+    margin-bottom: 10px;
+}
+
+.card-medio .add-icon{
+    font-size: 30px;
+    width: fit-content;
+    align-self: end;
+    cursor: pointer;
+    transition: transform .3s;
+}
+
+.card-medio .add-icon:hover{
+    transform: scale(1.2);
+}
+
+.card-grande{
+    width: 100%;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-grande .header-card-grande{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.header-card-grande .titulo-card{
+    margin: 0;
+    text-align: center;
+}
+
+.header-card-grande .legenda{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.legenda span{
+    width: 40px;
+    height: 20px;
+    background-color: #2d0c87;
+}
+
+.legenda h4{
+    margin: 0;
+    color: #737373;
+}

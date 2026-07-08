@@ -1,0 +1,56 @@
+/* menu lateral */
+.menu-lateral {
+    width: 350px;
+    height: 100vh;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0;
+    background-color: #2d0c87;
+}
+
+.menu-lateral .navegacao{
+    padding: 70px 10px;
+}
+
+.menu-lateral ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* botoes menu lateral */
+.menu-lateral .navegacao .botao-menu{
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    display: grid;
+    grid-template-columns: 32px auto;
+    align-items: center;
+    padding: 10px 30px;
+    margin-bottom: 10px;
+}
+
+.menu-lateral .navegacao .botao-menu:hover{
+    background-color: rgba(0, 0, 0, .33);
+}
+
+.botao-menu .texto-botao-menu{
+    text-align: center;
+    font-size: 22px;
+}
+
+.botao-menu .icon-menu{
+    font-size: 40px;
+}
+
+.ativo{
+    background-color: rgba(0, 0, 0, .33);
+    border-left: 8px solid #3d97ff;
+}
+
+.menu-lateral .navegacao h1{
+    color: white;
+    text-align: center;
+    font-size: 34px;
+    margin-bottom: 50px;
+}
