@@ -1,6 +1,6 @@
 /* menu lateral */
 .menu-lateral {
-    width: 350px;
+    width: 300px;
     height: 100vh;
     flex-shrink: 0;
     position: fixed;

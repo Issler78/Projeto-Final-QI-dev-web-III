@@ -25,13 +25,13 @@ body {
 
 /* MAIN */
 main {
-    margin-left: 350px;
+    margin-left: 300px;
     padding: 40px 30px;
 }
 
 main h1{
     font-size: 30px;
-    margin: 0;
+    margin: 0 0 10px 0;
 }
 
 
