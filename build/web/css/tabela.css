@@ -73,7 +73,7 @@
     box-shadow: 0 0 5px rgba(33, 150, 243, 0.3);
 }
 
-.add-btn {
+.btn-add {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -88,7 +88,7 @@
     border-radius: 4px;
 }
 
-.add-btn:hover {
+.btn-add:hover {
     transform: scale(1.1);
 }
 

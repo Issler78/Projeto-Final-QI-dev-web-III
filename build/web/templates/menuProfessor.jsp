@@ -3,6 +3,7 @@
     String pagina = request.getParameter("pagina");
 %>
 <aside class="menu-lateral">
+    <h1>ERP Escolar</h1>
     <div class="navegacao">
         <ul>
             <li>

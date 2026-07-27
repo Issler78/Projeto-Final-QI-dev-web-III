@@ -8,8 +8,14 @@
     background-color: #2d0c87;
 }
 
+.menu-lateral h1{
+    color: white;
+    text-align: center;
+    margin: 20px auto;
+}
+
 .menu-lateral .navegacao{
-    padding: 70px 10px;
+    padding: 40px 10px;
 }
 
 .menu-lateral ul{

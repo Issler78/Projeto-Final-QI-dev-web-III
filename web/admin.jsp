@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/menu.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=admin_panel_settings,book,campaign,group,home,how_to_reg,school" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,campaign,close,delete,group,home,how_to_reg,school,visibility" rel="stylesheet" />
 </head>
 <body>
     <!-- Menu lateral -->
