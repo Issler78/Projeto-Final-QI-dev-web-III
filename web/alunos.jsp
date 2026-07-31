@@ -8,8 +8,7 @@
         <link rel="stylesheet" href="css/menu.css">
         <link rel="stylesheet" href="css/tabela.css"/>
         <link rel="stylesheet" href="css/modal.css">
-
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,campaign,close,delete,group,home,how_to_reg,school,visibility" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,calendar_month,campaign,close,delete,event_note,group,groups,home,how_to_reg,keyboard_arrow_right,menu_book,school,visibility" rel="stylesheet" />
     </head>
     <body>
         <!-- Menu lateral -->
@@ -34,18 +33,18 @@
                     <thead>
                     <th>ID</th>
                     <th>Nome</th>
-                    <th class="col-cpf">CPF</th>
+                    <th>E-mail</th>
                     <th>Turma</th>
-                    <th>Contato</th>
+                    <th class="col-contato">Contato</th>
                     <th>Ações</th>
                     </thead>
                     <tbody>
                         <tr>
                             <td>001</td>
                             <td>Matheus Issler</td>
-                            <td class="col-cpf">99999999999</td>
+                            <td>matheus1@estudante.com</td>
                             <td>301</td>
-                            <td>54999999999</td>
+                            <td class="col-contato">54999999999</td>
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
                                 <span class="material-symbols-outlined blue">visibility</span>
@@ -54,10 +53,10 @@
                         </tr>
                         <tr>
                             <td>002</td>
-                            <td>Pedro Gabriel</td>
-                            <td class="col-cpf">99999999991</td>
-                            <td>201</td>
-                            <td>54999999991</td>
+                            <td>Rafael Machado</td>
+                            <td>rafael2@estudante.com</td>
+                            <td>301</td>
+                            <td class="col-contato">54999999999</td>
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
                                 <span class="material-symbols-outlined blue">visibility</span>
@@ -67,9 +66,9 @@
                         <tr>
                             <td>003</td>
                             <td>João Bastos</td>
-                            <td class="col-cpf">99999999992</td>
+                            <td>joao@estudante.com</td>
                             <td>101</td>
-                            <td>54999999992</td>
+                            <td class="col-contato">54999999992</td>
                             <td>
                                 <div class="botoes-acao">
                                     <span class="material-symbols-outlined green">border_color</span>
@@ -100,10 +99,10 @@
                         <input type="text" id="nome" name="nome" maxlength="100" required>
                     </div>
 
-                    <div class="campo">
+<!--                    <div class="campo"> email sera gerado automaticamente
                         <label for="email">E-mail</label>
                         <input type="email" id="email" name="email" maxlength="150" required>
-                    </div>
+                    </div>-->
 
                     <div class="linha">
                         <div class="campo">
@@ -141,41 +140,12 @@
             </div>
         </div>
 
+        <script src="js/modal.js"></script>
         <script>
-            const modal = document.getElementById("modal");
-            const openBtn = document.getElementById("openModal");
-            const confirmBtn = document.getElementById("confirm");
-
-            openBtn.addEventListener("click", () => {
-                modal.style.display = "flex";
-            });
-
-            document.querySelectorAll(".close").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    modal.style.display = "none";
-                });
-            });
-
             confirmBtn.addEventListener("click", () => {
-                alert("Aluno Cadastrado!");
+                alert("Aluno cadastrado!");
                 modal.style.display = "none";
             });
-
-            // fechar ao clicar fora do modal
-            modal.addEventListener("click", (event) => {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
-
-            function apenasNumeros(campo, tamanhoMax) {
-                campo.addEventListener("input", () => {
-                    campo.value = campo.value.replace(/\D/g, "").slice(0, tamanhoMax);
-                });
-            }
-
-            apenasNumeros(document.getElementById("telefone"), 11);
-            apenasNumeros(document.getElementById("cpf"), 11);
         </script>
     </body>
 </html>

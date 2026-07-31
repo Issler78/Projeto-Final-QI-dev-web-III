@@ -78,6 +78,7 @@
 
 .linha {
     display: flex;
+    align-items: end;
     gap: 12px;
 }
 

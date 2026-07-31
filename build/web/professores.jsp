@@ -8,8 +8,7 @@
         <link rel="stylesheet" href="css/menu.css">
         <link rel="stylesheet" href="css/tabela.css">
         <link rel="stylesheet" href="css/modal.css">
-
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,campaign,close,delete,group,home,how_to_reg,school,visibility" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,calendar_month,campaign,close,delete,event_note,group,groups,home,how_to_reg,keyboard_arrow_right,menu_book,school,visibility" rel="stylesheet" />
     </head>
     <body>
         <!-- Menu lateral -->
@@ -31,7 +30,7 @@
                     <thead>
                         <th>ID</th>
                         <th>Nome</th>
-                        <th class="col-cpf">CPF</th>
+                        <th class="col-contato">Contato</th>
                         <th>Disciplina</th>
                         <th>E-mail</th>
                         <th>Ações</th>
@@ -40,7 +39,7 @@
                         <tr>
                             <td>001</td>
                             <td>Matheus Issler</td>
-                            <td class="col-cpf">99999999999</td>
+                            <td class="col-contato">99999999999</td>
                             <td>Matemática</td>
                             <td>issler@email.com</td>
                             <td class="botoes-acao">
@@ -52,7 +51,7 @@
                         <tr>
                             <td>002</td>
                             <td>Pedro Gabriel</td>
-                            <td class="col-cpf">99999999991</td>
+                            <td class="col-contato">99999999991</td>
                             <td>História</td>
                             <td>pedro@email.com</td>
                             <td class="botoes-acao">
@@ -64,7 +63,7 @@
                         <tr>
                             <td>003</td>
                             <td>João Bastos</td>
-                            <td class="col-cpf">99999999992</td>
+                            <td class="col-contato">99999999992</td>
                             <td>Física</td>
                             <td>joao@email.com</td>
                             <td>
@@ -95,10 +94,10 @@
                         <input type="text" id="nome" name="nome" maxlength="100" required>
                     </div>
 
-                    <div class="campo">
+<!--                    <div class="campo"> email sera gerado automaticamente
                         <label for="email">E-mail</label>
                         <input type="email" id="email" name="email" maxlength="150" required>
-                    </div>
+                    </div>-->
 
                     <div class="linha">
                         <div class="campo">
@@ -112,12 +111,8 @@
                         </div>
                     </div>
 
-                    <div class="linha">
-                        <div class="campo">
-                            <label for="data_nascimento">Data de nascimento</label>
-                            <input type="date" id="data_nascimento" name="data_nascimento" required>
-                        </div>
-
+                    <div class="linha" style="align-items: start">
+                        
                         <div class="campo">
                             <label>Disciplina(s)</label>
                             <div class="checkbox-lista">
@@ -140,6 +135,11 @@
                                 </label>
                             </div>
                         </div>
+                        
+                        <div class="campo">
+                            <label for="data_nascimento">Data de nascimento</label>
+                            <input type="date" id="data_nascimento" name="data_nascimento" required>
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -151,41 +151,12 @@
             </div>
         </div>
 
+        <script src="js/modal.js"></script>
         <script>
-            const modal = document.getElementById("modal");
-            const openBtn = document.getElementById("openModal");
-            const confirmBtn = document.getElementById("confirm");
-
-            openBtn.addEventListener("click", () => {
-                modal.style.display = "flex";
-            });
-
-            document.querySelectorAll(".close").forEach(btn => {
-                btn.addEventListener("click", () => {
-                    modal.style.display = "none";
-                });
-            });
-
             confirmBtn.addEventListener("click", () => {
                 alert("Professor cadastrado!");
                 modal.style.display = "none";
             });
-
-            // fechar ao clicar fora do modal
-            modal.addEventListener("click", (event) => {
-                if (event.target === modal) {
-                    modal.style.display = "none";
-                }
-            });
-
-            function apenasNumeros(campo, tamanhoMax) {
-                campo.addEventListener("input", () => {
-                    campo.value = campo.value.replace(/\D/g, "").slice(0, tamanhoMax);
-                });
-            }
-
-            apenasNumeros(document.getElementById("telefone"), 11);
-            apenasNumeros(document.getElementById("cpf"), 11);
         </script>
     </body>
 </html>

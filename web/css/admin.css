@@ -1,0 +1,60 @@
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.admin-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    background-color: #ffffff;
+    border: 1px solid #D0D0D0;
+    border-radius: 8px;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s ease;
+}
+
+.admin-card:hover {
+    border-color: #2D0C87;
+}
+
+.admin-icon {
+    font-size: 32px;
+    color: #2D0C87;
+}
+
+.admin-card h3 {
+    margin: 0;
+    color: #2D0C87;
+}
+
+.admin-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #737373;
+}
+
+.submenu-header{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.submenu-header span{
+    font-size: 40px;
+    color: black;
+    transition: transform .3s;
+}
+
+.submenu-header span:hover{
+    transform: scale(1.2);
+}
+
+.submenu-header h1{
+    margin: 0;
+}

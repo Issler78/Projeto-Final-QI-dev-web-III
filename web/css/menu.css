@@ -8,10 +8,30 @@
     background-color: #2d0c87;
 }
 
-.menu-lateral h1{
+.linha-header-menu-lateral{
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto 20px;
+}
+
+.linha-header-menu-lateral span{
     color: white;
+    font-size: 32px;
+    cursor: pointer;
+    transition: transform ease-out .3s;
+}
+
+.linha-header-menu-lateral span:hover{
+    transform: scale(1.2);
+}
+
+.linha-header-menu-lateral h1{
+    color: white;
+    flex: 1;
     text-align: center;
-    margin: 20px auto;
+    margin: 0;
 }
 
 .menu-lateral .navegacao{
@@ -59,4 +79,20 @@
     text-align: center;
     font-size: 34px;
     margin-bottom: 50px;
+}
+
+.submenu-menu {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 0 55px;
+    padding-left: 10px;
+    border-left: 2px solid #5ea8ff;
+    color: #d9d9d9;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.submenu-icon {
+    font-size: 18px;
 }
