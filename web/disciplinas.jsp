@@ -106,6 +106,8 @@
 
         <script src="js/modal.js"></script>
         <script>
+            const confirmBtn = document.getElementById("confirm");
+
             confirmBtn.addEventListener("click", () => {
                 alert("Disciplina cadastrada!");
                 modal.style.display = "none";

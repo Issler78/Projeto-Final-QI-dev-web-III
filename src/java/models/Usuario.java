@@ -4,7 +4,16 @@ import java.time.LocalDate;
 import enums.RoleUsuarioEnum;
 
 public class Usuario {
-
+    int id;
+    String nome;
+    String email;
+    String senha;
+    String telefone;
+    LocalDate dataNascimento;
+    String cpf;
+    RoleUsuarioEnum role;
+    
+    
     public void setId(int id) {
         this.id = id;
     }
@@ -36,14 +45,6 @@ public class Usuario {
     public void setRole(RoleUsuarioEnum role) {
         this.role = role;
     }
-    int id;
-    String nome;
-    String email;
-    String senha;
-    String telefone;
-    LocalDate dataNascimento;
-    String cpf;
-    RoleUsuarioEnum role;
 
     public Usuario(int id, String nome, String email, String senha, String telefone, LocalDate dataNascimento, String cpf, RoleUsuarioEnum role) {
         this.id = id;

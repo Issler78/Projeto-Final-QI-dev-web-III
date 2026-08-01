@@ -1,3 +1,14 @@
+<%@page import="controllers.AlunoController"%>
+<%@page import="controllers.TurmaController"%>
+<%@page import="models.Aluno"%>
+<%@page import="models.Turma"%>
+<%@page import="java.util.Set"%>
+
+<%
+    AlunoController alunoController = new AlunoController();
+    TurmaController turmaController = new TurmaController();
+%>
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html lang="pt-br">
     <head>
@@ -28,55 +39,37 @@
 
             <div class="content">
 
-                <!-- dps, fazer a tabela dinamica com jsp:include -->
                 <table class="tabela">
                     <thead>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Turma</th>
-                    <th class="col-contato">Contato</th>
-                    <th>Ações</th>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Turma</th>
+                        <th class="col-contato">Contato</th>
+                        <th>Ações</th>
                     </thead>
                     <tbody>
+                        <%
+                            Set<Aluno> alunos = alunoController.getAll();
+                            for(Aluno aluno : alunos){
+                        %>
+                        
                         <tr>
-                            <td>001</td>
-                            <td>Matheus Issler</td>
-                            <td>matheus1@estudante.com</td>
-                            <td>301</td>
-                            <td class="col-contato">54999999999</td>
+                            <td><%= aluno.getId() %></td>
+                            <td><%= aluno.getUsuario().getNome() %></td>
+                            <td><%= aluno.getUsuario().getEmail() %></td>
+                            <td><%= aluno.getTurma().getSala() %></td>
+                            <td class="col-contato"><%= aluno.getUsuario().getTelefone() %></td>
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
                                 <span class="material-symbols-outlined blue">visibility</span>
                                 <span class="material-symbols-outlined red">delete</span>
                             </td>
                         </tr>
-                        <tr>
-                            <td>002</td>
-                            <td>Rafael Machado</td>
-                            <td>rafael2@estudante.com</td>
-                            <td>301</td>
-                            <td class="col-contato">54999999999</td>
-                            <td class="botoes-acao">
-                                <span class="material-symbols-outlined green">border_color</span>
-                                <span class="material-symbols-outlined blue">visibility</span>
-                                <span class="material-symbols-outlined red">delete</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>003</td>
-                            <td>João Bastos</td>
-                            <td>joao@estudante.com</td>
-                            <td>101</td>
-                            <td class="col-contato">54999999992</td>
-                            <td>
-                                <div class="botoes-acao">
-                                    <span class="material-symbols-outlined green">border_color</span>
-                                    <span class="material-symbols-outlined blue">visibility</span>
-                                    <span class="material-symbols-outlined red">delete</span>
-                                </div>
-                            </td>
-                        </tr>
+                        
+                        <% } %>
+                        
+                        
                     </tbody>
                 </table>
             </div>
@@ -98,11 +91,6 @@
                         <label for="nome">Nome</label>
                         <input type="text" id="nome" name="nome" maxlength="100" required>
                     </div>
-
-<!--                    <div class="campo"> email sera gerado automaticamente
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" maxlength="150" required>
-                    </div>-->
 
                     <div class="linha">
                         <div class="campo">
@@ -126,7 +114,16 @@
                             <label for="turma">Turma</label>
                             <select id="turma" name="turma_id" required>
                                 <option value="" selected disabled>Selecione</option>
-                                <!-- opções de turma irao vir do back-end -->
+                                <!-- opções de turmas que estao no banco -->
+                                <%
+                                    Set<Turma> turmas = turmaController.getAll();
+                                    for(Turma turma : turmas){
+                                %>
+                                
+                                <option value=<%= turma.getId() %> ><%= turma.getSala() %></option>
+                                
+                                <% } %>
+                                
                             </select>
                         </div>
                     </div>
@@ -142,6 +139,8 @@
 
         <script src="js/modal.js"></script>
         <script>
+            const confirmBtn = document.getElementById("confirm");
+
             confirmBtn.addEventListener("click", () => {
                 alert("Aluno cadastrado!");
                 modal.style.display = "none";
