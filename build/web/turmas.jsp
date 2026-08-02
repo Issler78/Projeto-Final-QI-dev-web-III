@@ -119,6 +119,8 @@
 
         <script src="js/modal.js"></script>
         <script>
+            const confirmBtn = document.getElementById("confirm");
+
             confirmBtn.addEventListener("click", () => {
                 alert("Turma cadastrada!");
                 modal.style.display = "none";

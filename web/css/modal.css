@@ -43,7 +43,7 @@
     margin: 0;
 }
 
-.modal-form {
+#modal-form {
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -139,4 +139,9 @@
 .checkbox-item input[type="checkbox"] {
     accent-color: #2D0C87;
     cursor: pointer;
+}
+
+.error {
+    color: red;
+    font-size: 14px;
 }

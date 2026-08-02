@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import enums.RoleUsuarioEnum;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.sql.Date;
 import java.sql.Statement;
 
 public class UsuarioController {
@@ -61,6 +62,12 @@ public class UsuarioController {
     ) throws Exception{
         Connection conn = new Conexao().connect();
 
+        // validando se existe usuarios cadastrados com o mesmo cpf ou mesmo telefone
+        String erro = validate(cpf, telefone, conn);
+        if(erro != null){
+            throw new Exception(erro);
+        }
+        
         String sql = """
             INSERT INTO usuarios (nome, email, senha, telefone, data_nascimento, cpf, role)
             VALUES (?, ?, ?, ?, ?, ?, ?);
@@ -73,7 +80,7 @@ public class UsuarioController {
             ps.setString(2, email);
             ps.setString(3, senha);
             ps.setString(4, telefone);
-            ps.setString(5, dataNascimento.toString());
+            ps.setDate(5, Date.valueOf(dataNascimento));
             ps.setString(6, cpf);
             ps.setString(7, role.toString());
 
@@ -82,12 +89,44 @@ public class UsuarioController {
             ResultSet result = ps.getGeneratedKeys();
 
             // retorna o id do usuario criado
-            return result.getInt(1);
+            int id = 0;
+            while(result.next()){
+                id = result.getInt(1);
+            }
+            return id;
         } catch(SQLException e){
-            throw new Exception("Erro ao salvar usuario");
+            throw new Exception("Erro ao salvar usuario: " + e.getMessage());
         } finally {
             conn.close();
         }
+    }
+    
+    private String validate(String cpf, String telefone, Connection conn) throws Exception{
+        String sql = """
+            SELECT id, cpf, telefone FROM usuarios WHERE cpf = ? OR telefone = ?;
+        """;
+        
+        String mensagem = null;
+        try{
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, cpf);
+            ps.setString(2, telefone);
+            
+            ResultSet result = ps.executeQuery();
+            
+            if(result.next()){
+                if(cpf.equals(result.getString("cpf"))){
+                    mensagem = "Esse CPF já está cadastrado.";
+                }
+                if(telefone.equals(result.getString("telefone"))){
+                    mensagem = "Esse telefone já está cadastrado.";
+                }
+            }
+        } catch (SQLException e) {
+            throw new Exception("Erro: " + e.getMessage());
+        }
+        
+        return mensagem;
     }
         
 }

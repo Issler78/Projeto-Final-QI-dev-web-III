@@ -1,6 +1,5 @@
 const modal = document.getElementById("modal");
 const openBtn = document.getElementById("openModal");
-const confirmBtn = document.getElementById("confirm");
 
 openBtn.addEventListener("click", () => {
     modal.style.display = "flex";

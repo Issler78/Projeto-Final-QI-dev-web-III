@@ -122,6 +122,8 @@
 
         <script src="js/modal.js"></script>
         <script>
+            const confirmBtn = document.getElementById("confirm");
+
             confirmBtn.addEventListener("click", () => {
                 alert("Período cadastrado!");
                 modal.style.display = "none";

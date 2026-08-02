@@ -173,6 +173,8 @@
 
         <script src="js/modal.js"></script>
         <script>
+            const confirmBtn = document.getElementById("confirm");
+
             confirmBtn.addEventListener("click", () => {
                 alert("Horário cadastrado!");
                 modal.style.display = "none";

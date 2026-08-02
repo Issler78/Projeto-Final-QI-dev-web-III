@@ -2,11 +2,49 @@
 <%@page import="controllers.TurmaController"%>
 <%@page import="models.Aluno"%>
 <%@page import="models.Turma"%>
-<%@page import="java.util.Set"%>
+<%@page import="java.util.LinkedHashSet"%>
 
 <%
     AlunoController alunoController = new AlunoController();
     TurmaController turmaController = new TurmaController();
+
+    if (request.getMethod().equalsIgnoreCase("POST")) {
+        String nome = request.getParameter("nome");
+        String cpf = request.getParameter("cpf");
+        String telefone = request.getParameter("telefone");
+        String dataNascimento = request.getParameter("data_nascimento");
+        String turmaId = request.getParameter("turma_id");
+
+        // validacao simples
+        if ((nome == null || nome.isBlank())
+                || (cpf == null || cpf.isBlank() || cpf.length() != 11)
+                || (telefone == null || telefone.isBlank() || telefone.length() != 11)
+                || (dataNascimento == null || dataNascimento.isBlank())
+                || (turmaId == null || turmaId.isBlank())) {
+            session.setAttribute("erro", "Por favor, preencha os campos corretamente.");
+            response.sendRedirect("alunos.jsp");
+            return;
+        }
+
+        try{  
+            // salva aluno
+            alunoController.save(
+                    nome,
+                    cpf,
+                    telefone,
+                    dataNascimento,
+                    Integer.parseInt(turmaId)
+            );
+        } catch(Exception e){
+            session.setAttribute("erro", e.getMessage());
+            response.sendRedirect("alunos.jsp");
+            return;
+        }
+
+        
+        response.sendRedirect("alunos.jsp");
+        return;
+    }
 %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -41,35 +79,35 @@
 
                 <table class="tabela">
                     <thead>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>E-mail</th>
-                        <th>Turma</th>
-                        <th class="col-contato">Contato</th>
-                        <th>Ações</th>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Turma</th>
+                    <th class="col-contato">Contato</th>
+                    <th>Ações</th>
                     </thead>
                     <tbody>
                         <%
-                            Set<Aluno> alunos = alunoController.getAll();
-                            for(Aluno aluno : alunos){
+                            LinkedHashSet<Aluno> alunos = alunoController.getAll();
+                            for (Aluno aluno : alunos) {
                         %>
-                        
+
                         <tr>
-                            <td><%= aluno.getId() %></td>
-                            <td><%= aluno.getUsuario().getNome() %></td>
-                            <td><%= aluno.getUsuario().getEmail() %></td>
-                            <td><%= aluno.getTurma().getSala() %></td>
-                            <td class="col-contato"><%= aluno.getUsuario().getTelefone() %></td>
+                            <td><%= aluno.getId()%></td>
+                            <td><%= aluno.getUsuario().getNome()%></td>
+                            <td><%= aluno.getUsuario().getEmail()%></td>
+                            <td><%= aluno.getTurma().getSala()%></td>
+                            <td class="col-contato"><%= aluno.getUsuario().getTelefone()%></td>
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
                                 <span class="material-symbols-outlined blue">visibility</span>
                                 <span class="material-symbols-outlined red">delete</span>
                             </td>
                         </tr>
-                        
+
                         <% } %>
-                        
-                        
+
+
                     </tbody>
                 </table>
             </div>
@@ -85,22 +123,22 @@
                     <span class="material-symbols-outlined modal-close close">close</span>
                 </div>
 
-                <form class="modal-form">
+                <form id="modal-form" method="POST" action="alunos.jsp">
 
                     <div class="campo">
                         <label for="nome">Nome</label>
-                        <input type="text" id="nome" name="nome" maxlength="100" required>
+                        <input type="text" name="nome" id="nome" maxlength="100" required>
                     </div>
 
                     <div class="linha">
                         <div class="campo">
                             <label for="telefone">Telefone</label>
-                            <input type="text" id="telefone" name="telefone" maxlength="11" placeholder="Somente números" required>
+                            <input type="text" name="telefone" id="telefone" maxlength="11" minlength="11" placeholder="Somente números" required>
                         </div>
 
                         <div class="campo">
                             <label for="cpf">CPF</label>
-                            <input type="text" id="cpf" name="cpf" maxlength="11" placeholder="Somente números" required>
+                            <input type="text" name="cpf" id="cpf" maxlength="11" minlength="11" placeholder="Somente números" required>
                         </div>
                     </div>
 
@@ -112,21 +150,26 @@
 
                         <div class="campo">
                             <label for="turma">Turma</label>
-                            <select id="turma" name="turma_id" required>
+                            <select name="turma_id" id="turma" required>
                                 <option value="" selected disabled>Selecione</option>
                                 <!-- opções de turmas que estao no banco -->
                                 <%
-                                    Set<Turma> turmas = turmaController.getAll();
-                                    for(Turma turma : turmas){
+                                    LinkedHashSet<Turma> turmas = turmaController.getAll();
+                                    for (Turma turma : turmas) {
                                 %>
-                                
-                                <option value=<%= turma.getId() %> ><%= turma.getSala() %></option>
-                                
+
+                                <option value=<%= turma.getId()%> ><%= turma.getSala()%></option>
+
                                 <% } %>
-                                
+
                             </select>
                         </div>
                     </div>
+
+                    <!-- mensagem de erro do formulario -->
+                    <% if (session.getAttribute("erro") != null) {%>
+                    <span class="error"><%= session.getAttribute("erro")%></span>
+                    <% } %>
 
                     <div class="modal-footer">
                         <button type="button" class="btn-cancelar close">Cancelar</button>
@@ -137,14 +180,28 @@
             </div>
         </div>
 
+                    
+                    
         <script src="js/modal.js"></script>
+        
+        <!-- verifica se tem mensagem de erro para abrir o modal ao carregar a pagina -->
+        <% if (session.getAttribute("erro") != null) {%>
         <script>
-            const confirmBtn = document.getElementById("confirm");
-
-            confirmBtn.addEventListener("click", () => {
-                alert("Aluno cadastrado!");
-                modal.style.display = "none";
-            });
+            document.getElementById("modal").style.display = "flex";
         </script>
+        <%     
+                session.removeAttribute("erro");
+            } 
+        %>
+        
+        <!-- verifica se tem mensagem de sucesso para exibir um alerta -->
+        <% if (session.getAttribute("sucesso") != null) { %>
+        <script>
+            alert("<%= session.getAttribute("sucesso") %>");
+        </script>
+        <%
+            session.removeAttribute("sucesso");
+        }
+        %>
     </body>
 </html>

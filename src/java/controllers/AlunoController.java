@@ -6,7 +6,6 @@ import models.Usuario;
 import models.Turma;
 import models.Aluno;
 import java.util.LinkedHashSet;
-import java.util.Set;
 import java.sql.ResultSet;
 
 import java.sql.Connection;
@@ -14,19 +13,24 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.apache.commons.lang3.StringUtils;
 
 public class AlunoController {
     private final UsuarioController usuarioController = new UsuarioController();
 
-    void save(String nome, String cpf, String telefone, String data_nascimento, int turma_id) throws Exception {
+    public void save(String nome, String cpf, String telefone, String data_nascimento, int turma_id) throws Exception {
         // preparando alguns valores para serem criados automaticamente
 
+        // string sem acentos
+        String nomeFormatado = StringUtils.stripAccents(nome.strip().split(" ")[0].toLowerCase());
+        
         // email para o formato: nome + primeiros 3 numeros do cpf + @estudante.com
-        String email = nome.strip().split(" ")[0].toLowerCase() + cpf.substring(0, 2) + "@estudante.com";
+        String email = nomeFormatado + cpf.trim().substring(0, 3) + "@estudante.com";
+        
 
         // senha para o formato: @nome#datanascimento*
         // data de nascimento no formato ddmmyyyy
-        String senha = "@" + nome.strip().split(" ")[0].toLowerCase() + "#" + LocalDate.parse(data_nascimento, DateTimeFormatter.ofPattern("ddMMyyyy")) + "*";
+        String senha = "@" + nomeFormatado + "#" + LocalDate.parse(data_nascimento).format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "*";
 
 
 
@@ -57,13 +61,13 @@ public class AlunoController {
 
             ps.executeUpdate();
         } catch(SQLException e){
-            throw new Exception("Erro ao salvar aluno");
+            throw new Exception("Erro ao salvar aluno: " + e.getMessage());
         } finally {
             conn.close();
         }
     }
     
-    public Set<Aluno> getAll() throws Exception{
+    public LinkedHashSet<Aluno> getAll() throws Exception{
         Connection conn = new Conexao().connect();
 
         String sql = """
@@ -77,13 +81,14 @@ public class AlunoController {
                      INNER JOIN usuarios u 
                         ON a.usuario_id = u.id 
                      INNER JOIN turmas t 
-                        ON a.turma_id = t.id;
+                        ON a.turma_id = t.id
+                     ORDER BY nome ASC;
         """;
 
         try {
             ResultSet result = conn.prepareStatement(sql).executeQuery();
 
-            Set<Aluno> alunos = new LinkedHashSet<>();
+            LinkedHashSet<Aluno> alunos = new LinkedHashSet<>();
             while(result.next()){
                 Aluno aluno = new Aluno();
                 aluno.setId(result.getInt("id"));
@@ -105,7 +110,7 @@ public class AlunoController {
 
             return alunos;
         } catch (SQLException e) {
-            throw new Exception("Erro ao listar turmas: " + e);
+            throw new Exception("Erro ao listar turmas: " + e.getMessage());
         } finally {
             conn.close();
         }
