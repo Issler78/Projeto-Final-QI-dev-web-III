@@ -101,9 +101,9 @@
                     setTimeout(function() {
                         var msg = document.getElementById('mensagem-sucesso');
                         if (msg) {
-                            msg.style.display = 'none'; // Esconde a mensagem
+                            msg.style.display = 'none';
                         }
-                    }, 4000); // 4000 milissegundos = 4 segundos
+                    }, 4000);
                 </script>
                 
             <%
@@ -142,7 +142,8 @@
                             <td class="col-contato"><%= aluno.getUsuario().getTelefone()%></td>
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
-                                <span class="material-symbols-outlined blue">visibility</span>
+                                
+                                <a href="aluno.jsp?id=<%= aluno.getId() %>"><span class="material-symbols-outlined blue">visibility</span></a>
                                 
                                 <!-- form para mandar excluir aluno -->
                                 <form method="POST" action="alunos.jsp" style="margin: 0; display: inline;">

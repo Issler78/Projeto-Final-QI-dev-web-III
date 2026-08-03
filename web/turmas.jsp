@@ -6,7 +6,7 @@
         <title>Sistema Escolar</title>
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" href="css/menu.css">
-        <link rel="stylesheet" href="css/tabela.css"/>
+        <link rel="stylesheet" href="css/tabela.css">
         <link rel="stylesheet" href="css/modal.css">
         <link rel="stylesheet" href="css/admin.css">
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&icon_names=add_2,admin_panel_settings,book,border_color,calendar_clock,calendar_month,campaign,close,delete,event_note,group,groups,home,how_to_reg,keyboard_arrow_left,keyboard_arrow_right,menu_book,school,visibility" rel="stylesheet" />
