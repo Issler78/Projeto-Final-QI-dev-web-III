@@ -9,6 +9,29 @@
     TurmaController turmaController = new TurmaController();
 
     if (request.getMethod().equalsIgnoreCase("POST")) {
+        String acao = request.getParameter("acao");
+        
+        // para excluir aluno
+        if("deletar".equals(acao)){
+            try{
+                int alunoId = Integer.parseInt(request.getParameter("aluno_id"));
+                
+                boolean deletado = alunoController.delete(alunoId);
+                if(!deletado){
+                    return;
+                }
+                
+                session.setAttribute("sucesso", "Aluno deletado com sucesso!");
+                response.sendRedirect("alunos.jsp");
+                return;
+            } catch (Exception e){
+                return;
+            }
+        }
+        
+        
+        
+        // para cadastrar aluno
         String nome = request.getParameter("nome");
         String cpf = request.getParameter("cpf");
         String telefone = request.getParameter("telefone");
@@ -41,7 +64,7 @@
             return;
         }
 
-        
+        session.setAttribute("sucesso", "Aluno cadastrado com sucesso!");
         response.sendRedirect("alunos.jsp");
         return;
     }
@@ -101,7 +124,16 @@
                             <td class="botoes-acao">
                                 <span class="material-symbols-outlined green">border_color</span>
                                 <span class="material-symbols-outlined blue">visibility</span>
-                                <span class="material-symbols-outlined red">delete</span>
+                                
+                                <!-- form para mandar excluir aluno -->
+                                <form method="POST" action="alunos.jsp" style="margin: 0; display: inline;">
+                                    <input type="hidden" name="acao" value="deletar">
+                                    <input type="hidden" name="aluno_id" value="<%= aluno.getId() %>">
+                                    
+                                    <button type="submit" style="background: none; border: none; padding: 0;">
+                                        <span class="material-symbols-outlined red">delete</span>
+                                    </button>
+                                </form>
                             </td>
                         </tr>
 
@@ -192,16 +224,6 @@
         <%     
                 session.removeAttribute("erro");
             } 
-        %>
-        
-        <!-- verifica se tem mensagem de sucesso para exibir um alerta -->
-        <% if (session.getAttribute("sucesso") != null) { %>
-        <script>
-            alert("<%= session.getAttribute("sucesso") %>");
-        </script>
-        <%
-            session.removeAttribute("sucesso");
-        }
         %>
     </body>
 </html>

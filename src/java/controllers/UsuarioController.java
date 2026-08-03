@@ -128,5 +128,65 @@ public class UsuarioController {
         
         return mensagem;
     }
+    
+    
+    
+    public boolean delete(int id, Connection conn) throws Exception{
+        Usuario usuario = getById(id);
+        if(usuario == null){
+            throw new Exception("Usuário não encontrado");
+        }
         
+        String sql = """
+            DELETE FROM usuarios WHERE id = ?;             
+        """;
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            
+            int linhasDeletadas = ps.executeUpdate();
+            if(linhasDeletadas > 0){
+                return true;
+            }
+            
+            return false;
+        } catch (SQLException e){
+            throw new Exception("Erro ao excluir usuário: " + e.getMessage());
+        }
+    }
+    
+    
+    
+    public Usuario getById(int id) throws Exception{
+        Connection conn = new Conexao().connect();
+        
+        String querySql = """
+            SELECT * FROM usuarios WHERE id = ?;
+        """;
+        try{
+            PreparedStatement ps = conn.prepareStatement(querySql);
+            ps.setInt(1, id);
+            
+            ResultSet resultado = ps.executeQuery();
+            Usuario usuario = null;
+            if(resultado.next()){
+                usuario = new Usuario();
+                usuario.setId(resultado.getInt("id"));
+                usuario.setNome(resultado.getString("nome"));
+                usuario.setEmail(resultado.getString("email"));
+                usuario.setSenha(resultado.getString("senha"));
+                usuario.setTelefone(resultado.getString("telefone"));
+                usuario.setDataNascimento(LocalDate.parse(resultado.getString("data_nascimento")));
+                usuario.setCpf(resultado.getString("cpf"));
+                usuario.setRole(RoleUsuarioEnum.valueOf(resultado.getString("role")));
+            }
+            
+            return usuario;
+        } catch (SQLException e){
+            throw new Exception("Erro ao tentar procurar usuário: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
 }

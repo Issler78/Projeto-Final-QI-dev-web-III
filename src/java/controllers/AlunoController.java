@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public class AlunoController {
     private final UsuarioController usuarioController = new UsuarioController();
+    private final TurmaController turmaController = new TurmaController();
 
     public void save(String nome, String cpf, String telefone, String data_nascimento, int turma_id) throws Exception {
         // preparando alguns valores para serem criados automaticamente
@@ -111,6 +112,67 @@ public class AlunoController {
             return alunos;
         } catch (SQLException e) {
             throw new Exception("Erro ao listar turmas: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
+    
+    public boolean delete(int id) throws Exception{
+        Connection conn = new Conexao().connect();
+        
+        // tentar encontrar aluno antes de excluir
+        Aluno aluno = getById(id);
+        if(aluno == null){
+            throw new Exception("Aluno não encontrado");
+        }
+        
+        String deleteSql = """
+            DELETE FROM alunos WHERE id = ?;
+        """;
+        
+        try {
+            PreparedStatement ps = conn.prepareStatement(deleteSql);
+            ps.setInt(1, id);
+            
+            int linhasDeletadas = ps.executeUpdate();
+            // se deletou aluno, deletar tambem usuario
+            if(linhasDeletadas > 0){
+                
+                // se deletar com sucesso o usuario, retorna true
+                return usuarioController.delete(aluno.getUsuario().getId(), conn);
+            }
+            
+            return false;
+        } catch (SQLException e){
+            throw new Exception("Erro ao excluir aluno: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
+    
+    public Aluno getById(int id) throws Exception{
+        Connection conn = new Conexao().connect();
+        
+        String querySql = """
+            SELECT * FROM alunos WHERE id = ?;
+        """;
+        
+        try{
+            PreparedStatement ps = conn.prepareStatement(querySql);
+            ps.setInt(1, id);
+            
+            ResultSet resultado = ps.executeQuery();
+            Aluno aluno = null;
+            if(resultado.next()){
+                aluno = new Aluno();
+                aluno.setId(resultado.getInt("id"));
+                aluno.setUsuario(usuarioController.getById(resultado.getInt("usuario_id")));
+                aluno.setTurma(turmaController.getById(resultado.getInt("turma_id")));
+            }
+            
+            return aluno;
+        } catch (SQLException e){
+            throw new Exception("Erro ao tentar procurar Aluno: " + e.getMessage());
         } finally {
             conn.close();
         }
