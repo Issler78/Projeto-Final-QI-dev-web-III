@@ -91,6 +91,25 @@
         <!-- main -->
         <main>
             <h1>Alunos</h1>
+            
+            <% if(session.getAttribute("sucesso") != null) { %>
+            <div class="sucesso" id="mensagem-sucesso">
+                    <p><%= session.getAttribute("sucesso") %></p>
+                </div>
+                
+                <script>
+                    setTimeout(function() {
+                        var msg = document.getElementById('mensagem-sucesso');
+                        if (msg) {
+                            msg.style.display = 'none'; // Esconde a mensagem
+                        }
+                    }, 4000); // 4000 milissegundos = 4 segundos
+                </script>
+                
+            <%
+                    session.removeAttribute("sucesso");
+                }
+            %>
 
             <!-- botao de adicionar (abrira um modal) -->
             <button class="btn-add" id="openModal">

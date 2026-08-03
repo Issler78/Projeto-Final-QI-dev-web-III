@@ -34,7 +34,20 @@ main h1{
     margin: 0 0 10px 0;
 }
 
+.sucesso{
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
+.sucesso p{
+    color: black;
+    background-color: greenyellow;
+    padding: 10px 30px;
+    border-radius: 10px;
+    border-bottom: solid 3px green;
+}
 
 /* CARDS */
 .card{
