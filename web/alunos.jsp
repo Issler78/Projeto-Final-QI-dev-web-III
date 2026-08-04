@@ -30,44 +30,79 @@
         }
         
         
-        
-        // para cadastrar aluno
+        // campos para cadastrar ou editar aluno
         String nome = request.getParameter("nome");
         String cpf = request.getParameter("cpf");
         String telefone = request.getParameter("telefone");
         String dataNascimento = request.getParameter("data_nascimento");
         String turmaId = request.getParameter("turma_id");
+        String alunoId = request.getParameter("aluno_id");
 
         // validacao simples
         if ((nome == null || nome.isBlank())
                 || (cpf == null || cpf.isBlank() || cpf.length() != 11)
                 || (telefone == null || telefone.isBlank() || telefone.length() != 11)
                 || (dataNascimento == null || dataNascimento.isBlank())
-                || (turmaId == null || turmaId.isBlank())) {
+                || (turmaId == null || turmaId.isBlank())) 
+        {
             session.setAttribute("erro", "Por favor, preencha os campos corretamente.");
+            
+            // salvar inputs
+            session.setAttribute("form_nome", nome);
+            session.setAttribute("form_cpf", cpf);
+            session.setAttribute("form_telefone", telefone);
+            session.setAttribute("form_data_nascimento", dataNascimento);
+            session.setAttribute("form_turma", turmaId);
+            
             response.sendRedirect("alunos.jsp");
             return;
         }
 
-        try{  
-            // salva aluno
-            alunoController.save(
+        try{
+            // verifica se é edicao ou insert
+            if(alunoId != null && !alunoId.isBlank()){
+                // editar
+                alunoController.update(
+                    Integer.parseInt(alunoId),
                     nome,
                     cpf,
                     telefone,
                     dataNascimento,
                     Integer.parseInt(turmaId)
-            );
+                );
+                
+                session.setAttribute("sucesso", "Aluno atualizado com sucesso!");
+            } else{
+                // criar
+                alunoController.save(
+                    nome,
+                    cpf,
+                    telefone,
+                    dataNascimento,
+                    Integer.parseInt(turmaId)
+                );
+                
+                session.setAttribute("sucesso", "Aluno cadastrado com sucesso!");
+            }
+            
         } catch(Exception e){
             session.setAttribute("erro", e.getMessage());
+            
+            // salvar inputs 
+            session.setAttribute("form_nome", nome);
+            session.setAttribute("form_cpf", cpf);
+            session.setAttribute("form_telefone", telefone);
+            session.setAttribute("form_data_nascimento", dataNascimento);
+            session.setAttribute("form_turma", turmaId);
+            
             response.sendRedirect("alunos.jsp");
             return;
         }
 
-        session.setAttribute("sucesso", "Aluno cadastrado com sucesso!");
         response.sendRedirect("alunos.jsp");
         return;
     }
+    
 %>
 
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -141,11 +176,14 @@
                             <td><%= aluno.getTurma().getSala()%></td>
                             <td class="col-contato"><%= aluno.getUsuario().getTelefone()%></td>
                             <td class="botoes-acao">
-                                <span class="material-symbols-outlined green">border_color</span>
+                                <!-- botao para editar aluno, enviando dados do aluno atual para a funcao de abrir o modal -->
+                                <button style="background: none; border: none; padding: 0;" class="btn-editar" onclick="abrirModalEdicao(<%= aluno.getId() %>, '<%= aluno.getUsuario().getNome() %>', '<%= aluno.getUsuario().getCpf() %>', '<%= aluno.getUsuario().getTelefone() %>', '<%= aluno.getUsuario().getDataNascimento() %>', <%= aluno.getTurma().getId() %>)">
+                                    <span class="material-symbols-outlined green">border_color</span>
+                                </button>
                                 
                                 <a href="aluno.jsp?id=<%= aluno.getId() %>"><span class="material-symbols-outlined blue">visibility</span></a>
                                 
-                                <!-- form para mandar excluir aluno -->
+                                <!-- form para excluir aluno -->
                                 <form method="POST" action="alunos.jsp" style="margin: 0; display: inline;">
                                     <input type="hidden" name="acao" value="deletar">
                                     <input type="hidden" name="aluno_id" value="<%= aluno.getId() %>">
@@ -167,50 +205,57 @@
 
 
 
-        <!-- modal de criacao de aluno -->
+        <!-- modal de criacao e edicao de aluno -->
         <div class="modal" id="modal">
             <div class="modal-container">
                 <div class="modal-header">
-                    <h2>Novo aluno</h2>
+                    <h2 id="modal-titulo">Novo aluno</h2>
                     <span class="material-symbols-outlined modal-close close">close</span>
                 </div>
 
                 <form id="modal-form" method="POST" action="alunos.jsp">
 
+                    <!-- campo oculto com id do aluno (apenas para edicao) -->
+                    <input type="hidden" name="aluno_id" id="aluno_id" value="">
+                    
                     <div class="campo">
                         <label for="nome">Nome</label>
-                        <input type="text" name="nome" id="nome" maxlength="100" required>
+                        <input type="text" name="nome" id="nome" maxlength="100" value="<%= session.getAttribute("form_nome") != null ? session.getAttribute("form_nome") : "" %>" required>
                     </div>
 
                     <div class="linha">
                         <div class="campo">
                             <label for="telefone">Telefone</label>
-                            <input type="text" name="telefone" id="telefone" maxlength="11" minlength="11" placeholder="Somente números" required>
+                            <input type="text" name="telefone" id="telefone" maxlength="11" minlength="11" placeholder="Somente números" value="<%= session.getAttribute("form_telefone") != null ? session.getAttribute("form_telefone") : "" %>" required>
                         </div>
 
                         <div class="campo">
                             <label for="cpf">CPF</label>
-                            <input type="text" name="cpf" id="cpf" maxlength="11" minlength="11" placeholder="Somente números" required>
+                            <input type="text" name="cpf" id="cpf" maxlength="11" minlength="11" placeholder="Somente números" value="<%= session.getAttribute("form_cpf") != null ? session.getAttribute("form_cpf") : "" %>" required>
                         </div>
                     </div>
 
                     <div class="linha">
                         <div class="campo">
                             <label for="data_nascimento">Data de nascimento</label>
-                            <input type="date" id="data_nascimento" name="data_nascimento" required>
+                            <input type="date" id="data_nascimento" name="data_nascimento" value="<%= session.getAttribute("form_data_nascimento") != null ? session.getAttribute("form_data_nascimento") : "" %>" required>
                         </div>
 
                         <div class="campo">
                             <label for="turma">Turma</label>
                             <select name="turma_id" id="turma" required>
-                                <option value="" selected disabled>Selecione</option>
+                                <option selected disabled>Selecione</option>
                                 <!-- opções de turmas que estao no banco -->
                                 <%
+                                    String turmaSelecionada = String.valueOf(session.getAttribute("form_turma"));
+                                    
                                     LinkedHashSet<Turma> turmas = turmaController.getAll();
                                     for (Turma turma : turmas) {
                                 %>
 
-                                <option value=<%= turma.getId()%> ><%= turma.getSala()%></option>
+                                <option value="<%= turma.getId() %>" <%= String.valueOf(turma.getId()).equals(turmaSelecionada) ? "selected" : "" %> >
+                                    <%= turma.getSala() %>
+                                </option>
 
                                 <% } %>
 
@@ -219,9 +264,7 @@
                     </div>
 
                     <!-- mensagem de erro do formulario -->
-                    <% if (session.getAttribute("erro") != null) {%>
-                    <span class="error"><%= session.getAttribute("erro")%></span>
-                    <% } %>
+                    <span class="error" id="erro-message"></span>
 
                     <div class="modal-footer">
                         <button type="button" class="btn-cancelar close">Cancelar</button>
@@ -237,12 +280,19 @@
         <script src="js/modal.js"></script>
         
         <!-- verifica se tem mensagem de erro para abrir o modal ao carregar a pagina -->
-        <% if (session.getAttribute("erro") != null) {%>
+        <% if (session.getAttribute("erro") != null) { %>
         <script>
+            document.getElementById("erro-message").textContent =
+                "<%= session.getAttribute("erro") %>";
             document.getElementById("modal").style.display = "flex";
         </script>
-        <%     
+        <%
                 session.removeAttribute("erro");
+                session.removeAttribute("form_nome");
+                session.removeAttribute("form_cpf");
+                session.removeAttribute("form_telefone");
+                session.removeAttribute("form_data_nascimento");
+                session.removeAttribute("form_turma");
             } 
         %>
     </body>

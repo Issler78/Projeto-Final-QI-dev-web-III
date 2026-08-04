@@ -63,7 +63,8 @@ public class UsuarioController {
         Connection conn = new Conexao().connect();
 
         // validando se existe usuarios cadastrados com o mesmo cpf ou mesmo telefone
-        String erro = validate(cpf, telefone, conn);
+        // passando -1, a validacao de verificar um usuario diferente, sempre vai passar por nao existir um usuario de id -1
+        String erro = validate(-1, cpf, telefone, conn);
         if(erro != null){
             throw new Exception(erro);
         }
@@ -101,9 +102,64 @@ public class UsuarioController {
         }
     }
     
-    private String validate(String cpf, String telefone, Connection conn) throws Exception{
+    
+    
+    public void update(
+        int usuarioId,
+        String nome,
+        String email,
+        String senha,
+        String telefone,
+        LocalDate dataNascimento,
+        String cpf
+    ) throws Exception{
+        Connection conn = new Conexao().connect();
+        
+        // procurar se existe usuario antes de editar
+        Usuario usuario = getById(usuarioId);
+        if(usuario == null){
+            throw new Exception("Usuário não encontrado");
+        }
+
+        // validando se existe usuarios cadastrados com o mesmo cpf ou mesmo telefone
+        String erro = validate(usuarioId, cpf, telefone, conn);
+        if(erro != null){
+            throw new Exception(erro);
+        }
+        
+        
+        
         String sql = """
-            SELECT id, cpf, telefone FROM usuarios WHERE cpf = ? OR telefone = ?;
+            UPDATE usuarios 
+            SET nome = ?, email = ?, senha = ?, telefone = ?, data_nascimento = ?, cpf = ?
+            WHERE id = ?;
+        """;
+        try{
+            // preparando comando para editar na tabela de usuarios
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nome);
+            ps.setString(2, email);
+            ps.setString(3, senha);
+            ps.setString(4, telefone);
+            ps.setDate(5, Date.valueOf(dataNascimento));
+            ps.setString(6, cpf);
+            ps.setInt(7, usuarioId);
+
+            ps.executeUpdate();
+            
+        } catch(SQLException e){
+            throw new Exception("Erro ao salvar usuario: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
+    
+    
+    
+    private String validate(int usuarioId, String cpf, String telefone, Connection conn) throws Exception{
+        String sql = """
+            SELECT id, cpf, telefone FROM usuarios 
+            WHERE (cpf = ? OR telefone = ?) AND id != ?;
         """;
         
         String mensagem = null;
@@ -111,6 +167,7 @@ public class UsuarioController {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, cpf);
             ps.setString(2, telefone);
+            ps.setInt(3, usuarioId);
             
             ResultSet result = ps.executeQuery();
             

@@ -19,7 +19,7 @@ public class AlunoController {
     private final UsuarioController usuarioController = new UsuarioController();
     private final TurmaController turmaController = new TurmaController();
 
-    public void save(String nome, String cpf, String telefone, String data_nascimento, int turma_id) throws Exception {
+    public void save(String nome, String cpf, String telefone, String data_nascimento, int turmaId) throws Exception {
         // preparando alguns valores para serem criados automaticamente
 
         // string sem acentos
@@ -58,7 +58,7 @@ public class AlunoController {
             // preparando comando para inserir na tabela de alunos um novo aluno
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, novoUsuarioId);
-            ps.setInt(2, turma_id);
+            ps.setInt(2, turmaId);
 
             ps.executeUpdate();
         } catch(SQLException e){
@@ -73,17 +73,20 @@ public class AlunoController {
 
         String sql = """
             SELECT 
-                     a.id AS id, 
-                     u.nome AS nome, 
-                     u.email AS email, 
-                     u.telefone AS telefone, 
-                     t.sala AS turma 
-                     FROM alunos a 
-                     INNER JOIN usuarios u 
-                        ON a.usuario_id = u.id 
-                     INNER JOIN turmas t 
-                        ON a.turma_id = t.id
-                     ORDER BY nome ASC;
+                a.id AS id, 
+                u.nome AS nome, 
+                u.email AS email, 
+                u.telefone AS telefone,
+                u.cpf AS cpf,
+                u.data_nascimento AS data_nascimento,
+                t.id AS turma_id, 
+                t.sala AS sala
+            FROM alunos a 
+            INNER JOIN usuarios u 
+                ON a.usuario_id = u.id 
+            INNER JOIN turmas t 
+                ON a.turma_id = t.id
+            ORDER BY nome ASC;
         """;
 
         try {
@@ -99,11 +102,14 @@ public class AlunoController {
                 usuario.setNome(result.getString("nome"));
                 usuario.setEmail(result.getString("email"));
                 usuario.setTelefone(result.getString("telefone"));
+                usuario.setCpf(result.getString("cpf"));
+                usuario.setDataNascimento(LocalDate.parse(result.getString("data_nascimento")));
                 aluno.setUsuario(usuario);
                 
                 // definindo a turma do aluno (turma é um objeto no modelo de aluno)
                 Turma turma = new Turma();
-                turma.setSala(result.getString("turma"));
+                turma.setSala(result.getString("sala"));
+                turma.setId(result.getInt("turma_id"));
                 aluno.setTurma(turma);
 
                 alunos.add(aluno);
@@ -112,6 +118,64 @@ public class AlunoController {
             return alunos;
         } catch (SQLException e) {
             throw new Exception("Erro ao listar turmas: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
+    
+    public void update(int alunoId, String nome, String cpf, String telefone, String dataNascimento, int turmaId) throws Exception{
+        // tentar encontrar aluno antes de editar
+        Aluno aluno = getById(alunoId);
+        if(aluno == null){
+            throw new Exception("Aluno não encontrado");
+        }
+        
+        
+        
+        // EDITAR USUARIO ANTES
+        
+        // preparando alguns valores para serem criados automaticamente
+
+        // string sem acentos
+        String nomeFormatado = StringUtils.stripAccents(nome.strip().split(" ")[0].toLowerCase());
+        // email para o formato: nome + primeiros 3 numeros do cpf + @estudante.com
+        String email = nomeFormatado + cpf.trim().substring(0, 3) + "@estudante.com";
+
+        // senha para o formato: @nome#datanascimento*
+        // data de nascimento no formato ddmmyyyy
+        String senha = "@" + nomeFormatado + "#" + LocalDate.parse(dataNascimento).format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "*";
+        
+
+        
+        // editar usuario
+        usuarioController.update(
+                aluno.getUsuario().getId(),
+                nome,
+                email,
+                senha,
+                telefone,
+                LocalDate.parse(dataNascimento),
+                cpf
+        );
+        
+        
+        
+        Connection conn = new Conexao().connect();
+        
+        String sql = """
+            UPDATE alunos 
+            SET turma_id = ?
+            WHERE id = ?;
+        """;
+        try{
+            // preparando comando para editar na tabela de alunos
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, turmaId);
+            ps.setInt(2, alunoId);
+
+            ps.executeUpdate();
+        } catch (SQLException e){
+            throw new Exception("Erro ao editar aluno: " + e.getMessage());
         } finally {
             conn.close();
         }
@@ -126,10 +190,11 @@ public class AlunoController {
             throw new Exception("Aluno não encontrado");
         }
         
+        
+        
         String deleteSql = """
             DELETE FROM alunos WHERE id = ?;
         """;
-        
         try {
             PreparedStatement ps = conn.prepareStatement(deleteSql);
             ps.setInt(1, id);
