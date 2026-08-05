@@ -90,26 +90,26 @@ public class AlunoController {
         """;
 
         try {
-            ResultSet result = conn.prepareStatement(sql).executeQuery();
+            ResultSet resultado = conn.prepareStatement(sql).executeQuery();
 
             LinkedHashSet<Aluno> alunos = new LinkedHashSet<>();
-            while(result.next()){
+            while(resultado.next()){
                 Aluno aluno = new Aluno();
-                aluno.setId(result.getInt("id"));
+                aluno.setId(resultado.getInt("id"));
                 
                 // definindo o usuario do aluno (usuario é um objeto no modelo de aluno)
                 Usuario usuario = new Usuario();
-                usuario.setNome(result.getString("nome"));
-                usuario.setEmail(result.getString("email"));
-                usuario.setTelefone(result.getString("telefone"));
-                usuario.setCpf(result.getString("cpf"));
-                usuario.setDataNascimento(LocalDate.parse(result.getString("data_nascimento")));
+                usuario.setNome(resultado.getString("nome"));
+                usuario.setEmail(resultado.getString("email"));
+                usuario.setTelefone(resultado.getString("telefone"));
+                usuario.setCpf(resultado.getString("cpf"));
+                usuario.setDataNascimento(LocalDate.parse(resultado.getString("data_nascimento")));
                 aluno.setUsuario(usuario);
                 
                 // definindo a turma do aluno (turma é um objeto no modelo de aluno)
                 Turma turma = new Turma();
-                turma.setSala(result.getString("sala"));
-                turma.setId(result.getInt("turma_id"));
+                turma.setSala(resultado.getString("sala"));
+                turma.setId(resultado.getInt("turma_id"));
                 aluno.setTurma(turma);
 
                 alunos.add(aluno);

@@ -3,12 +3,13 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
+    // verifica se veio do formulario enviado
     if(request.getMethod().equalsIgnoreCase("POST")){
         UsuarioController controller = new UsuarioController();
         
         Usuario usuario = controller.login(request.getParameter("email"), request.getParameter("senha"));
         if(usuario != null){
-            // logar na sessao o usuario
+            // adicionar na sessao o usuario
             session.setAttribute("usuario", usuario);
             
             response.sendRedirect("home.jsp");
@@ -45,6 +46,7 @@
 
             <form class="login-form" action="index.jsp" method="POST">
 
+                <!-- campos do formulario / tela de login -->
                 <div class="campo">
                     <label for="email">E-mail</label>
                     <input type="email" name="email" required>
@@ -55,6 +57,8 @@
                     <input type="password" name="senha" required>
                 </div>
                 
+                
+                <!-- verifica se existe uma mensagem de erro na sessao, e mostra se houver -->
                 <% if(session.getAttribute("mensagem") != null) { %>
                     <span class="error"><%= session.getAttribute("mensagem").toString() %></span>
                 <%

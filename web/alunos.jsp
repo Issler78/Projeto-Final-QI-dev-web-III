@@ -8,19 +8,23 @@
     AlunoController alunoController = new AlunoController();
     TurmaController turmaController = new TurmaController();
 
+    // verifica se veio dps de clicar no botao do formulario
     if (request.getMethod().equalsIgnoreCase("POST")) {
         String acao = request.getParameter("acao");
         
-        // para excluir aluno
+        // para excluir aluno verificamos se a acao é deletar e tentamos deletar
         if("deletar".equals(acao)){
             try{
                 int alunoId = Integer.parseInt(request.getParameter("aluno_id"));
                 
+                // enviamos para a funcao de deletar no controller
                 boolean deletado = alunoController.delete(alunoId);
+                // se nao conseguiu deletar, apenas retorna para a mesma pagina
                 if(!deletado){
                     return;
                 }
                 
+                // se conseguiu deletar, manda a mensagem que foi deletado
                 session.setAttribute("sucesso", "Aluno deletado com sucesso!");
                 response.sendRedirect("alunos.jsp");
                 return;
@@ -30,7 +34,7 @@
         }
         
         
-        // campos para cadastrar ou editar aluno
+        // pega campos para cadastrar ou editar aluno
         String nome = request.getParameter("nome");
         String cpf = request.getParameter("cpf");
         String telefone = request.getParameter("telefone");
@@ -38,7 +42,7 @@
         String turmaId = request.getParameter("turma_id");
         String alunoId = request.getParameter("aluno_id");
 
-        // validacao simples
+        // validacao simples (se os campos nao estao nulos, e se cpf e telefone possuem 11 caracteres)
         if ((nome == null || nome.isBlank())
                 || (cpf == null || cpf.isBlank() || cpf.length() != 11)
                 || (telefone == null || telefone.isBlank() || telefone.length() != 11)
@@ -47,7 +51,7 @@
         {
             session.setAttribute("erro", "Por favor, preencha os campos corretamente.");
             
-            // salvar inputs
+            // salvar inputs para mostrar ainda com os valores depois do erro
             session.setAttribute("form_nome", nome);
             session.setAttribute("form_cpf", cpf);
             session.setAttribute("form_telefone", telefone);
@@ -59,7 +63,7 @@
         }
 
         try{
-            // verifica se é edicao ou insert
+            // verifica se é edicao ou criacao
             if(alunoId != null && !alunoId.isBlank()){
                 // editar
                 alunoController.update(
@@ -181,9 +185,10 @@
                                     <span class="material-symbols-outlined green">border_color</span>
                                 </button>
                                 
+                                <!-- botao para ver aluno -->
                                 <a href="aluno.jsp?id=<%= aluno.getId() %>"><span class="material-symbols-outlined blue">visibility</span></a>
                                 
-                                <!-- form para excluir aluno -->
+                                <!-- form/botao para excluir aluno -->
                                 <form method="POST" action="alunos.jsp" style="margin: 0; display: inline;">
                                     <input type="hidden" name="acao" value="deletar">
                                     <input type="hidden" name="aluno_id" value="<%= aluno.getId() %>">
@@ -277,7 +282,7 @@
 
                     
                     
-        <script src="js/modal.js"></script>
+        <script src="js/modalAluno.js"></script>
         
         <!-- verifica se tem mensagem de erro para abrir o modal ao carregar a pagina -->
         <% if (session.getAttribute("erro") != null) { %>

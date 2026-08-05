@@ -1,8 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@page import="controllers.AlunoController"%>
+<%@page import="controllers.TurmaController"%>
 <%
     if(session.getAttribute("usuario") == null){
         response.sendRedirect("index.jsp");
     }
+    
+    AlunoController alunoController = new AlunoController();
+    TurmaController turmaController = new TurmaController();
+    int alunosAtivos = alunoController.getAll().size();
+    int turmasAtivas = turmaController.getAll().size();
 %>
 <html lang="pt-br">
 <head>
@@ -35,14 +42,14 @@
                         <h3 class="titulo-card">Alunos ativos</h3>
                         <div>
                             <span class="material-symbols-outlined icon-card green">how_to_reg</span>
-                            <span class="texto-card-pequeno green">42</span>
+                            <span class="texto-card-pequeno green"><%= alunosAtivos %></span>
                         </div>
                     </div>
                     <div class="card-pequeno card">
                         <h3 class="titulo-card">Turmas ativas</h3>
                         <div>
                             <span class="material-symbols-outlined icon-card green">book</span>
-                            <span class="texto-card-pequeno green">3</span>
+                            <span class="texto-card-pequeno green"><%= turmasAtivas %></span>
                         </div>
                     </div>
                     <div class="card-pequeno card">
