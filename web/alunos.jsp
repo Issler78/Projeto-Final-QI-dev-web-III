@@ -131,6 +131,7 @@
         <main>
             <h1>Alunos</h1>
             
+            <!-- verifica se existe mensagem de sucesso para mostrar na tela -->
             <% if(session.getAttribute("sucesso") != null) { %>
             <div class="sucesso" id="mensagem-sucesso">
                     <p><%= session.getAttribute("sucesso") %></p>

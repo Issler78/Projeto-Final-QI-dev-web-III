@@ -72,8 +72,7 @@
                 session.setAttribute("sucesso", "Turma atualizada com sucesso!");
 
             } else {
-
-                // criação
+                // criar
                 turmaController.save(
                         sala,
                         NivelTurmaEnum.valueOf(nivel),
@@ -84,9 +83,9 @@
             }
 
         } catch (Exception e) {
-
             session.setAttribute("erro", e.getMessage());
 
+            // salvar inputs para mostrar ainda com os valores depois do erro
             session.setAttribute("form_sala", sala);
             session.setAttribute("form_nivel", nivel);
             session.setAttribute("form_serie", serie);
@@ -130,6 +129,7 @@
                 <h1>Turmas</h1>
             </div>
             
+            <!-- verifica se existe mensagem de sucesso para mostrar na tela -->
             <% if(session.getAttribute("sucesso") != null) { %>
             <div class="sucesso" id="mensagem-sucesso">
                     <p><%= session.getAttribute("sucesso") %></p>

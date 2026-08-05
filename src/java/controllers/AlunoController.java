@@ -68,6 +68,8 @@ public class AlunoController {
         }
     }
     
+    
+    
     public LinkedHashSet<Aluno> getAll() throws Exception{
         Connection conn = new Conexao().connect();
 
@@ -122,6 +124,8 @@ public class AlunoController {
             conn.close();
         }
     }
+    
+    
     
     public void update(int alunoId, String nome, String cpf, String telefone, String dataNascimento, int turmaId) throws Exception{
         // tentar encontrar aluno antes de editar
@@ -181,6 +185,8 @@ public class AlunoController {
         }
     }
     
+    
+    
     public boolean delete(int id) throws Exception{
         Connection conn = new Conexao().connect();
         
@@ -214,6 +220,8 @@ public class AlunoController {
             conn.close();
         }
     }
+    
+    
     
     public Aluno getById(int id) throws Exception{
         Connection conn = new Conexao().connect();
