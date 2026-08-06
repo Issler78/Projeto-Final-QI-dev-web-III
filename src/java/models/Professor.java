@@ -1,14 +1,21 @@
 package models;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 public class Professor {
     int id;
     Usuario usuario;
+    Set<Disciplina> disciplinas;
 
-    public Professor() {}
+    public Professor() {
+        this.disciplinas = new LinkedHashSet<>();
+    }
 
     public Professor(int id, Usuario usuario, Turma turma) {
         this.id = id;
         this.usuario = usuario;
+        this.disciplinas = new LinkedHashSet<>();
     }
 
     public Usuario getUsuario() {
@@ -25,5 +32,13 @@ public class Professor {
 
     public void setId(int id) {
         this.id = id;
+    }
+    
+    public Set<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(Set<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 }

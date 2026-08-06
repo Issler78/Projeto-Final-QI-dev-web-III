@@ -19,7 +19,7 @@ public class AlunoController {
     private final UsuarioController usuarioController = new UsuarioController();
     private final TurmaController turmaController = new TurmaController();
 
-    public void save(String nome, String cpf, String telefone, String data_nascimento, int turmaId) throws Exception {
+    public void save(String nome, String cpf, String telefone, String dataNascimento, int turmaId) throws Exception {
         // preparando alguns valores para serem criados automaticamente
 
         // string sem acentos
@@ -31,7 +31,7 @@ public class AlunoController {
 
         // senha para o formato: @nome#datanascimento*
         // data de nascimento no formato ddmmyyyy
-        String senha = "@" + nomeFormatado + "#" + LocalDate.parse(data_nascimento).format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "*";
+        String senha = "@" + nomeFormatado + "#" + LocalDate.parse(dataNascimento).format(DateTimeFormatter.ofPattern("ddMMyyyy")) + "*";
 
 
 
@@ -40,7 +40,7 @@ public class AlunoController {
                 email,
                 senha,
                 telefone,
-                LocalDate.parse(data_nascimento),
+                LocalDate.parse(dataNascimento),
                 cpf,
                 RoleUsuarioEnum.ALUNO
         );
@@ -267,9 +267,9 @@ public class AlunoController {
             ps.setInt(1, id);
             
             int linhasDeletadas = ps.executeUpdate();
+            
             // se deletou aluno, deletar tambem usuario
             if(linhasDeletadas > 0){
-                
                 // se deletar com sucesso o usuario, retorna true
                 return usuarioController.delete(aluno.getUsuario().getId(), conn);
             }
