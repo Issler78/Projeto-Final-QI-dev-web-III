@@ -119,13 +119,74 @@ public class AlunoController {
 
             return alunos;
         } catch (SQLException e) {
-            throw new Exception("Erro ao listar turmas: " + e.getMessage());
+            throw new Exception("Erro ao listar alunos: " + e.getMessage());
         } finally {
             conn.close();
         }
     }
     
     
+    
+    public LinkedHashSet<Aluno> getAllByQuery(String q) throws Exception{
+        Connection conn = new Conexao().connect();
+
+        String sql = """
+            SELECT 
+                a.id AS id, 
+                u.nome AS nome, 
+                u.email AS email, 
+                u.telefone AS telefone,
+                u.cpf AS cpf,
+                u.data_nascimento AS data_nascimento,
+                t.id AS turma_id, 
+                t.sala AS sala
+            FROM alunos a 
+            INNER JOIN usuarios u 
+                ON a.usuario_id = u.id 
+            INNER JOIN turmas t 
+                ON a.turma_id = t.id
+            WHERE nome LIKE ?
+            ORDER BY nome ASC;
+        """;
+
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + q + "%");
+            
+            ResultSet resultado = ps.executeQuery();
+
+            LinkedHashSet<Aluno> alunos = new LinkedHashSet<>();
+            while(resultado.next()){
+                Aluno aluno = new Aluno();
+                aluno.setId(resultado.getInt("id"));
+                
+                // definindo o usuario do aluno (usuario é um objeto no modelo de aluno)
+                Usuario usuario = new Usuario();
+                usuario.setNome(resultado.getString("nome"));
+                usuario.setEmail(resultado.getString("email"));
+                usuario.setTelefone(resultado.getString("telefone"));
+                usuario.setCpf(resultado.getString("cpf"));
+                usuario.setDataNascimento(LocalDate.parse(resultado.getString("data_nascimento")));
+                aluno.setUsuario(usuario);
+                
+                // definindo a turma do aluno (turma é um objeto no modelo de aluno)
+                Turma turma = new Turma();
+                turma.setSala(resultado.getString("sala"));
+                turma.setId(resultado.getInt("turma_id"));
+                aluno.setTurma(turma);
+
+                alunos.add(aluno);
+            }
+
+            return alunos;
+        } catch (SQLException e) {
+            throw new Exception("Erro ao listar alunos: " + e.getMessage());
+        } finally {
+            conn.close();
+        }
+    }
+    
+            
     
     public void update(int alunoId, String nome, String cpf, String telefone, String dataNascimento, int turmaId) throws Exception{
         // tentar encontrar aluno antes de editar

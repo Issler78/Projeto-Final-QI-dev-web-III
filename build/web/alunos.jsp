@@ -7,6 +7,16 @@
 <%
     AlunoController alunoController = new AlunoController();
     TurmaController turmaController = new TurmaController();
+    LinkedHashSet<Aluno> alunos = alunoController.getAll();
+    
+    // se existe um parametro 'q' de pesquisa
+    if(request.getParameter("q") != null && !request.getParameter("q").isBlank()){
+        // limpa a busca que buscou todos
+        alunos.clear();
+        
+        // coloca os alunos buscados pelo nome
+        alunos = alunoController.getAllByQuery(request.getParameter("q"));
+    }
 
     // verifica se veio dps de clicar no botao do formulario
     if (request.getMethod().equalsIgnoreCase("POST")) {
@@ -151,11 +161,26 @@
                 }
             %>
 
-            <!-- botao de adicionar (abrira um modal) -->
-            <button class="btn-add" id="openModal">
-                Novo aluno
-                <span class="material-symbols-outlined icon-card">add_2</span>
-            </button>
+            
+            <div style="display: flex; align-items: center; justify-content: space-around;">
+                <!-- barra de pesquisa -->
+                <div class="barra-pesquisa">
+                    <form method="GET" action="alunos.jsp">
+                        <input type="text" name="q" placeholder="Pesquisar por nome" value="<%= request.getParameter("q") != null ? request.getParameter("q") : "" %>">
+
+                        <button type="submit">
+                            <span class="material-symbols-outlined">search</span>
+                            Pesquisar
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- botao de adicionar (abrira um modal) -->
+                <button class="btn-add" id="openModal">
+                    Novo aluno
+                    <span class="material-symbols-outlined icon-card">add_2</span>
+                </button>
+            </div>
 
             <div class="content">
 
@@ -170,7 +195,7 @@
                     </thead>
                     <tbody>
                         <%
-                            LinkedHashSet<Aluno> alunos = alunoController.getAll();
+                            // para cada aluno procurado, cria uma linha na tabela
                             for (Aluno aluno : alunos) {
                         %>
 

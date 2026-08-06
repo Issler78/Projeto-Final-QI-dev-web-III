@@ -75,8 +75,8 @@
                         </div>
 
                         <%
-                        } else {
-                            for (Professor professor : professores) {
+                            } else {
+                                for (Professor professor : professores) {
                         %>
 
                         <div class="campo-item">
