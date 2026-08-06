@@ -1,3 +1,6 @@
+<%@page import="java.util.LinkedHashSet"%>
+<%@page import="models.Turma"%>
+<%@page import="controllers.ProfessorController"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="controllers.AlunoController"%>
 <%@page import="controllers.TurmaController"%>
@@ -8,8 +11,10 @@
     
     AlunoController alunoController = new AlunoController();
     TurmaController turmaController = new TurmaController();
+    ProfessorController professorController = new ProfessorController();
     int alunosAtivos = alunoController.getAll().size();
     int turmasAtivas = turmaController.getAll().size();
+    int professoresAtivos = professorController.getAll().size();
 %>
 <html lang="pt-br">
 <head>
@@ -56,7 +61,7 @@
                         <h3 class="titulo-card">Professores</h3>
                         <div>
                             <span class="material-symbols-outlined icon-card blue">school</span>
-                            <span class="texto-card-pequeno blue">6</span>
+                            <span class="texto-card-pequeno blue"><%= professoresAtivos %></span>
                         </div>
                     </div>
                 </div>
@@ -77,14 +82,11 @@
                     <div class="grafico">
 
                         <div class="grafico-eixo-y">
-                            <span>20</span>
-                            <span>15</span>
                             <span>10</span>
                             <span>5</span>
                             <span>0</span>
                         </div>
 
-                        <!-- foreach para cada turma? -->
                         <div class="grafico-barras">
                             <div class="grafico-grid">
                                 <div class="grafico-grid-linha"></div>
@@ -93,22 +95,20 @@
                                 <div class="grafico-grid-linha"></div>
                             </div>
 
-
+                            <%
+                                LinkedHashSet<Turma> turmas = turmaController.getAll();
+                                for (Turma turma : turmas){
+                                    int quantidadeAlunos = turmaController.getById(turma.getId()).getQuantidadeAlunos();
+                            %>
+                            
                             <div class="grafico-coluna">
-                                <div class="grafico-barra" style="height: 100%;"></div>
-                                <span class="grafico-label">101</span>
+                                <div class="grafico-barra" title="<%= quantidadeAlunos %> aluno(s)" style="height: <%= quantidadeAlunos * 10 %>%;"></div>
+                                <span class="grafico-label"><%= turma.getSala() %></span>
                             </div>
 
-                            <div class="grafico-coluna">
-                                <div class="grafico-barra" style="height: 45%;"></div>
-                                <span class="grafico-label">201</span>
-                            </div>
-
-                            <div class="grafico-coluna">
-                                <div class="grafico-barra" style="height: 55%;"></div>
-                                <span class="grafico-label">301</span>
-                            </div>
-
+                            <%
+                                }
+                            %>
                         </div>
 
                     </div>

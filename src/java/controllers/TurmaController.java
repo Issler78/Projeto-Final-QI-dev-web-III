@@ -46,7 +46,21 @@ public class TurmaController {
         Connection conn = new Conexao().connect();
 
         String querySql = """
-            SELECT * FROM turmas WHERE id = ?;
+            SELECT
+                t.id AS id,
+                t.sala AS sala,
+                t.nivel AS nivel,
+                t.serie AS serie,
+                COUNT(a.id) AS quantidade_alunos
+            FROM turmas t
+            LEFT JOIN alunos a
+                ON a.turma_id = t.id
+            WHERE t.id = ?
+            GROUP BY
+                t.id,
+                t.sala,
+                t.nivel,
+                t.serie;
         """;
         try {
             PreparedStatement ps = conn.prepareStatement(querySql);
@@ -60,6 +74,7 @@ public class TurmaController {
                 turma.setNivel(NivelTurmaEnum.fromValor(resultado.getString("nivel")));
                 turma.setSala(resultado.getString("sala"));
                 turma.setSerie(SerieTurmaEnum.fromValor(resultado.getString("serie")));
+                turma.setQuantidadeAlunos(resultado.getInt("quantidade_alunos"));
             }
 
             return turma;
